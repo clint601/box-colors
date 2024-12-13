@@ -1,0 +1,21 @@
+*{box-sizing: border-box;}
+
+
+body {
+    margin: 0;
+    padding: 0;
+}
+
+#gameBoard {
+    margin-top: 30px;
+    width: 604px;
+    height: 604px;
+    border: 2px solid #000;
+    display: flex;
+    flex-wrap: wrap;
+    align-self: center;
+    top: 50%;
+    left: 50%;
+    position: absolute;
+    transform: translate(-50%, -50%);
+}
