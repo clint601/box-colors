@@ -3,98 +3,132 @@ class Game {
     constructor() {
         this.countDisplay = document.getElementById('countDisplay')
         this.gameBoard = document.getElementById('gameBoard')
+        this.bestScore = document.getElementById('bestScore')
+        this.freezeColorDisplay = document.getElementById('freezeColorDisplay')
+        this.freezeColor = ''
+        this.hasWon = false
         this.count = 0
         this.colors = [
             'red', 'blue', 'yellow', 'green', 'purple', 'orange', 'brown', 'gray', 'pink',
         ]
+        this.matches = 0
+        this.matchDisplay = document.getElementById('matchDisplay')
         
         this.boxes = [
             {
                 id: 1,
-                color: 'red',
+                color: this.colors[Math.floor(Math.random() * this.colors.length)]
             },
             {
                 id: 2,
-                color: 'blue'
+                color: this.colors[Math.floor(Math.random() * this.colors.length)]
             },
             {
                 id: 3,
-                color: 'yellow'
+                color: this.colors[Math.floor(Math.random() * this.colors.length)]
             },
             {
                 id : 4,
-                color: 'green'
+                color: this.colors[Math.floor(Math.random() * this.colors.length)]
             },
             {
                 id : 5,
-                color: 'purple'
+                color: this.colors[Math.floor(Math.random() * this.colors.length)]
             },
             {
                 id : 6,
-                color: 'orange'
+                color: this.colors[Math.floor(Math.random() * this.colors.length)]
             },
             {
                 id : 7,
-                color: 'brown'
+                color: this.colors[Math.floor(Math.random() * this.colors.length)]
             },
             {
                 id : 8,
-                color: 'gray'
+                color: this.colors[Math.floor(Math.random() * this.colors.length)]
             },
             {
                 id : 9,
-                color: 'pink'
-            },
+                color: this.colors[Math.floor(Math.random() * this.colors.length)]
+            }
         ]
     }
     
     init() {
-
-        this.CreatedBoxes()
+        this.getFreezeColor()
+        this.makeBoxes()
+        this.getMatches()
     }
 
-    CreatedBoxes() {
-        this.boxes.forEach(item => {
+    makeBoxes() {
+        this.boxes.forEach(el => {
             const box = document.createElement('div')
             box.classList.add('box')
-            box.setAttribute('id', `box-${item.id}`)
-            box.style.backgroundColor = item.color
+            box.setAttribute('id', `box-${el.id}`)
+            box.dataset.id = el.id
+            box.style.backgroundColor = el.color
             box.style.width = '200px'
             box.style.height = '200px'
 
-            this.placeOnBoard(box)
-            this.handleClick(box)
+            this.addToGameBoard(this.gameBoard, box)
+            this.showMatches()
+            
+            this.changeColor(box, this.boxes)
         })
     }
 
-    placeOnBoard(item) {
-        this.gameBoard.appendChild(item)
+    getMatches() {
+        for (let i = 0; i < this.boxes.length; i++) {
+            if (this.freezeColor == this.boxes[i].color) {
+                this.matches++
+                this.showMatches()
+            }
+        }
     }
 
-    handleClick(item) {
-        item.addEventListener('click', ()=>{
-            this.changeColor(item, this.RandomColor())
+    showMatches() {
+        this.matchDisplay.innerText = this.matches
+    }
 
-            this.getCount()
+    addToGameBoard(parent, child) {
+        return parent.appendChild(child)
+    }
+
+    getFreezeColor() {
+        this.freezeColor = this.colors[Math.floor(Math.random() * this.colors.length)]
+
+        this.freezeColorDisplay.innerText = this.freezeColor
+    }
+
+    changeColor(element, arr) {
+        element.addEventListener('click', ()=> {
+            // element.style.backgroundColor = this.colors[Math.floor(Math.random()* this.colors.length)]
+            for (let i = 0; i < arr.length; i++) {
+                if (arr[i].id == element.dataset.id) {
+                    // test freezeColor here
+                    if(this.freezeColor != arr[i].color) {
+                        this.count++
+                        this.countDisplay.innerText = this.count
+                        arr[i].color = this.colors[Math.floor(Math.random()* this.colors.length)]
+
+                        element.style.backgroundColor = arr[i].color
+
+                        if (arr[i].color == this.freezeColor) {
+                            this.matches++
+                            this.showMatches()
+                        }
+                    }
+                }
+            }
+            this.checkWin()
         })
     }
-    
-        RandomColor() {
-        const idx = Math.floor(Math.random() * this.colors.length)
 
-        const randonColor = this.colors[idx]
-
-        return randonColor
-    }
-
-    changeColor(el, rand) {
-        el.style.backgroundColor = rand
-    }
-
-    getCount() {
-        this.count++
-
-        this.countDisplay.innerText = this.count
+    checkWin() {
+        if (this.matches == 9) {
+            this.hasWon = !this.hasWon
+            console.log(this.hasWon)
+        }
     }
 }
 
