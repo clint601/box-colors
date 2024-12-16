@@ -49,7 +49,7 @@ class Game {
     }
     
     init() {
-        // console.log('initalized')
+
         this.CreatedBoxes()
     }
 
@@ -73,13 +73,13 @@ class Game {
 
     handleClick(item) {
         item.addEventListener('click', ()=>{
-            this.changeColor(item, this.getRandomColor())
+            this.changeColor(item, this.RandomColor())
 
             this.getCount()
         })
     }
     
-    getRandomColor() {
+        RandomColor() {
         const idx = Math.floor(Math.random() * this.colors.length)
 
         const randonColor = this.colors[idx]
